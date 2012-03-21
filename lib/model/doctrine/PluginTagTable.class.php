@@ -176,10 +176,20 @@ class PluginTagTable extends Doctrine_Table
 
         if (!isset($options['sort_by_popularity']) || (true !== $options['sort_by_popularity']))
         {
-            ksort($tags);
+            uksort($tags, array('TagTable', 'compareTags'));
         }
 
         return $tags;
+    }
+
+    /**
+     * Case insensitive comparison so results when sort_by_popularity is false are
+     * comparable to the results of MySQL doing the sorting (as seen most other places
+     * in a Symfony app)
+     */
+    static public function compareTags($a, $b)
+    {
+        return strcasecmp($a, $b);
     }
 
     /**
