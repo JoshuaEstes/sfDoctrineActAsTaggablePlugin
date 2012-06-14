@@ -6,7 +6,7 @@ function pkInlineTaggableWidget(selector, options)
 {	
 	$(selector).each(function()
 	{	
-	  var enhancedElement = $(this);
+        var enhancedElement = $(this);
 		// Semi-global
 		var typeaheadUrl = options['typeahead-url'];
 		var tagsLabel = (options['tags-label']) ? options['tags-label'] : 'Existing Tags';
@@ -38,10 +38,10 @@ function pkInlineTaggableWidget(selector, options)
 			}
 		}
 
-    function change()
-    {
-      enhancedElement.change();
-    }
+        function change()
+        {
+          enhancedElement.change();
+        }
     
 		function makePopularLink(attributes, title, text)
 		{
@@ -159,10 +159,16 @@ function pkInlineTaggableWidget(selector, options)
 		if ((typeof(allTags) == 'undefined') && (typeof(typeaheadUrl) != 'undefined'))
 		{
 			typeAheadBox.autocomplete({ 
-			  source: function (request, response) {
-					$.getJSON(typeaheadUrl, {
-						  term: extractLast(request.term)
-					  }, response);
+			    source: function (request, response) {
+                            $.ajax({
+                                url: typeaheadUrl,
+                                data: {
+                                    term: extractLast(request.term)
+                                },
+                                success: function(data) {
+                                    response(JSON.parse(data));
+                                }
+                            });
 				},
 				search: multipleSearch,
 				focus: multipleFocus,
